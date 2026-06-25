@@ -1,16 +1,10 @@
-venv/
 .venv/
+venv/
 __pycache__/
 *.pyc
 
-# Local database files
 database/*.db
 
-# Generated ML artifacts
-models/*.joblib
-models/training_report.txt
-
-# Local environment/config
 .env
-.vscode/
 .DS_Store
+.vscode/
