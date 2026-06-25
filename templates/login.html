@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - OPINION.AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="center-page">
+    <section class="card small-card">
+      <h1>Dashboard Login</h1>
+      <p class="muted">Owner and Admin access only.</p>
+
+      {% if error %}
+        <div class="message error" role="alert">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('login') }}">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          value="{{ email or '' }}"
+          placeholder="owner@example.com"
+          autocomplete="username"
+          required
+        >
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="current-password"
+          required
+        >
+
+        <button type="submit">Login</button>
+      </form>
+
+      <div class="hint">
+        <strong>Demo credentials for local testing only:</strong><br>
+        Owner: owner@example.com / owner123<br>
+        Admin: admin@example.com / admin123
+      </div>
+
+      <a class="link" href="{{ url_for('review_page') }}">Back to Review Page</a>
+    </section>
+  </main>
+</body>
+</html>

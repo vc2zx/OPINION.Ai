@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard - OPINION.AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>OPINION.AI Dashboard</h1>
+      <p class="muted">Logged in as {{ email }} ({{ user_type }})</p>
+    </div>
+
+    <div class="top-actions">
+      <form method="post" action="{{ url_for('analyze_queued') }}">
+        <button class="secondary" type="submit">Analyze Queued</button>
+      </form>
+
+      <a class="button-link" href="{{ url_for('export_csv') }}">Export CSV</a>
+
+      <form method="post" action="{{ url_for('logout') }}">
+        <button class="dark" type="submit">Logout</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stats">
+      <div class="card stat">
+        <h2>{{ total_reviews }}</h2>
+        <p>Total Reviews</p>
+      </div>
+
+      <div class="card stat">
+        <h2>{{ processed_reviews }}</h2>
+        <p>Processed Reviews</p>
+      </div>
+
+      <div class="card stat">
+        <h2>{{ queued_reviews }}</h2>
+        <p>Queued Reviews</p>
+      </div>
+
+      <div class="card stat">
+        <h2>{{ failed_reviews }}</h2>
+        <p>Failed Reviews</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Category Summary</h2>
+
+        {% for row in category_rows %}
+          <div class="bar-row">
+            <span>{{ row.category }}</span>
+            <strong>{{ row.count }}</strong>
+          </div>
+        {% else %}
+          <p class="muted">No analysis data yet.</p>
+        {% endfor %}
+      </div>
+
+      <div class="card">
+        <h2>Opinion Distribution</h2>
+
+        {% for row in opinion_rows %}
+          <div class="bar-row">
+            <span>{{ row.opinion|capitalize }}</span>
+            <strong>{{ row.count }}</strong>
+          </div>
+        {% else %}
+          <p class="muted">No opinion data yet.</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Analysis Results</h2>
+      <p class="muted">Confidence is an approximate dashboard score, not a calibrated scientific probability.</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Opinion</th>
+              <th scope="col">Count</th>
+              <th scope="col">Avg. Confidence</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for row in table_rows %}
+              <tr>
+                <td>{{ row.category }}</td>
+                <td><span class="pill opinion-{{ row.opinion }}">{{ row.opinion|capitalize }}</span></td>
+                <td>{{ row.count }}</td>
+                <td>{{ row.avg_confidence }}</td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="4">No results available.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Recent Reviews</h2>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Review</th>
+              <th scope="col">Stars</th>
+              <th scope="col">Status</th>
+              <th scope="col">Created At</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for row in recent_reviews %}
+              <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.text[:120] }}{% if row.text|length > 120 %}...{% endif %}</td>
+                <td>{{ row.stars }}</td>
+                <td><span class="pill status-{{ row.status }}">{{ row.status|capitalize }}</span></td>
+                <td>{{ row.created_at }}</td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="5">No reviews available.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

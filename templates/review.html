@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Submit Review - OPINION.AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="center-page">
+    <section class="card small-card">
+      <h1>Submit Your Review</h1>
+      <p class="muted">Share your restaurant experience. No login required.</p>
+
+      {% if error %}
+        <div class="message error" role="alert">{{ error }}</div>
+      {% endif %}
+
+      {% if success %}
+        <div class="message success" role="status">{{ success }}</div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('submit_review') }}">
+        <label for="stars">Star Rating</label>
+        <select id="stars" name="stars" required>
+          <option value="">Select rating</option>
+          <option value="5" {% if stars == '5' %}selected{% endif %}>5 - Excellent</option>
+          <option value="4" {% if stars == '4' %}selected{% endif %}>4 - Good</option>
+          <option value="3" {% if stars == '3' %}selected{% endif %}>3 - Neutral</option>
+          <option value="2" {% if stars == '2' %}selected{% endif %}>2 - Poor</option>
+          <option value="1" {% if stars == '1' %}selected{% endif %}>1 - Very Poor</option>
+        </select>
+
+        <label for="text">Review Text</label>
+        <textarea
+          id="text"
+          name="text"
+          rows="6"
+          maxlength="1000"
+          placeholder="Example: The food was delicious but the place was dirty."
+          required>{{ text or '' }}</textarea>
+
+        <button type="submit">Send Review</button>
+      </form>
+
+      <a class="link" href="{{ url_for('login') }}">Owner/Admin Login</a>
+    </section>
+  </main>
+</body>
+</html>
